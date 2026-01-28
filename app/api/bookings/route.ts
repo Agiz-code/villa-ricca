@@ -86,14 +86,12 @@ export async function POST(request: Request) {
     if (process.env.ADMIN_EMAIL) {
       await sendBookingEmail({
         id: booking.id,
-        roomName: booking.room.name,
+        room: { name: booking.room.name },
         checkIn: format(checkIn, "MMM dd, yyyy"),
         checkOut: format(checkOut, "MMM dd, yyyy"),
         guests: booking.guests,
         name: booking.name,
         email: booking.email,
-        phone: booking.phone,
-        message: booking.message,
         status: booking.status,
       });
     }

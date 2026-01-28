@@ -3,6 +3,7 @@ import { transporter } from "@/lib/nodemailer";
 import { BookingStatus } from "@prisma/client";
 
 export async function sendBookingEmail(booking: {
+  id?: string | number;
   status: BookingStatus;
   email: string;
   name: string;

@@ -16,8 +16,8 @@ async function main() {
         price: roomData.price,
         capacity: roomData.capacity,
         description: roomData.description,
-        images: roomData.images,
-        amenities: roomData.amenities,
+        images: roomData.images.join(","), // ["a.jpg", "b.jpg"] → "a.jpg,b.jpg"
+        amenities: roomData.amenities.join(","), // ["wifi", "pool"] → "wifi,pool"
       },
     });
   }
