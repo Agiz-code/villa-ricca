@@ -8,15 +8,20 @@ datasource db {
 }
 
 model Room {
-  id        String    @id
-  name      String
-  bookings  Booking[]
+  id          String    @id @default(uuid())
+  name        String    @unique
+  price       Float
+  capacity    Int?
+  description String?
+  images      String?   // comma-separated: "img1.jpg,img2.jpg" or JSON string
+  amenities   String?   // comma-separated: "wifi,parking,pool" or JSON string
+  bookings    Booking[]
 }
 
 model Booking {
-  id        Int       @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   roomId    String
-  room      Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  room      Room          @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   checkIn   DateTime
   checkOut  DateTime

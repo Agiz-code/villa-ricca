@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { ROOMS_DATA } from "../data/rooms";
-
 const prisma = new PrismaClient();
 
 async function main() {

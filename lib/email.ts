@@ -1,16 +1,8 @@
 import { format } from "date-fns";
 import { transporter } from "@/lib/nodemailer";
+import { BookingStatus } from "@prisma/client";
 
-const STATUS_MESSAGES = {
-  CONFIRMED: "Your booking has been confirmed! 🎉",
-  REJECTED:
-    "Unfortunately, your booking request could not be accepted at this time.",
-  CANCELLED: "Your booking has been cancelled.",
-} as const;
-
-type BookingStatus = keyof typeof STATUS_MESSAGES;
-
-export async function sendGuestStatusEmail(booking: {
+export async function sendBookingEmail(booking: {
   status: BookingStatus;
   email: string;
   name: string;
@@ -19,6 +11,15 @@ export async function sendGuestStatusEmail(booking: {
   checkOut: string | Date;
   guests: number;
 }) {
+  const STATUS_MESSAGES: Partial<Record<BookingStatus, string>> = {
+    PENDING:
+      "Your booking request has been received and is pending confirmation.",
+    CONFIRMED: "Your booking has been confirmed! 🎉",
+    REJECTED:
+      "Unfortunately, your booking request could not be accepted at this time.",
+    CANCELLED: "Your booking has been cancelled.",
+  };
+
   const statusText =
     STATUS_MESSAGES[booking.status] ?? "Your booking status has been updated.";
 

@@ -1,4 +1,3 @@
-// data/rooms.ts
 export type Room = {
   id: string;
   name: string;

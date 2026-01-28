@@ -1,16 +1,17 @@
 // app/api/bookings/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendBookingEmail } from "@/lib/email";
-import { format } from "date-fns";
+import { sendBookingEmail } from "@/lib/email"; // ← assumes you renamed in email.ts
+import { format, isBefore } from "date-fns";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // ── 1. Validate input dates ───────────────────────────────────────
+    // 1. Validate input dates
     const checkIn = new Date(body.checkIn);
     const checkOut = new Date(body.checkOut);
+    const now = new Date();
 
     if (
       isNaN(checkIn.getTime()) ||
@@ -23,15 +24,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // Prevent past dates
-    if (isBefore(checkIn, new Date())) {
+    if (isBefore(checkIn, now)) {
       return NextResponse.json(
         { error: "Check-in date cannot be in the past." },
         { status: 400 }
       );
     }
 
-    // ── 2. Find the room by name ──────────────────────────────────────
+    // 2. Find the room
     const room = await prisma.room.findUnique({
       where: { name: body.roomName },
     });
@@ -43,21 +43,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // ── 3. Check for overlapping bookings ─────────────────────────────
+    // 3. Check overlapping bookings
     const overlapping = await prisma.booking.findFirst({
       where: {
         roomId: room.id,
         OR: [
-          // New booking starts during an existing one
-          {
-            checkIn: { lte: checkOut },
-            checkOut: { gte: checkIn },
-          },
-          // Existing booking is completely inside new booking
-          {
-            checkIn: { gte: checkIn },
-            checkOut: { lte: checkOut },
-          },
+          { checkIn: { lte: checkOut }, checkOut: { gte: checkIn } },
+          { checkIn: { gte: checkIn }, checkOut: { lte: checkOut } },
         ],
       },
     });
@@ -72,7 +64,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // ── 4. Create the booking (status = PENDING) ──────────────────────
+    // 4. Create pending booking
     const booking = await prisma.booking.create({
       data: {
         roomId: room.id,
@@ -86,16 +78,11 @@ export async function POST(request: Request) {
         status: "PENDING",
       },
       include: {
-        room: {
-          select: {
-            name: true,
-            price: true,
-          },
-        },
+        room: { select: { name: true, price: true } },
       },
     });
 
-    // ── 5. Notify admin via email ─────────────────────────────────────
+    // 5. Notify admin
     if (process.env.ADMIN_EMAIL) {
       await sendBookingEmail({
         id: booking.id,
@@ -111,7 +98,7 @@ export async function POST(request: Request) {
       });
     }
 
-    // ── 6. Success response ───────────────────────────────────────────
+    // 6. Success
     return NextResponse.json(
       {
         success: true,
