@@ -42,7 +42,7 @@ export default function ExperiencesPage() {
         {experiences.map((exp) => (
           <div
             key={exp.title}
-            className="group relative rounded-3xl overflow-hidden aspect-[3/4] cursor-pointer"
+            className="group relative rounded-3xl overflow-hidden aspect-3/4 cursor-pointer"
           >
             {/* ✅ Image fix */}
             <Image
@@ -53,7 +53,7 @@ export default function ExperiencesPage() {
               sizes="(min-width: 768px) 33vw, 100vw"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-stone-900/80 via-transparent to-transparent" />
             <div className="absolute bottom-0 p-8 text-white">
               <span className="text-white/60 text-xs uppercase tracking-widest">
                 {exp.tag} — {exp.time}

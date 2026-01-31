@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CalendarIcon } from "lucide-react";
 
@@ -9,17 +10,25 @@ interface BookingOverlayProps {
 }
 
 export function BookingOverlay({ roomName, onClose }: BookingOverlayProps) {
-  if (!roomName) return null;
+  // Open WhatsApp after the overlay appears. Keep the hook call unconditional
+  // to comply with the Rules of Hooks; guard internally for `roomName`.
+  useEffect(() => {
+    if (!roomName) return;
 
-  const handleWhatsApp = () => {
     const text = `Hi Villa Rica! I would like to book the ${roomName}. Please let me know availability.`;
-    window.open(
-      `https://wa.me/08135103747?text=${encodeURIComponent(text)}`,
-      "_blank"
-    );
-  };
+    const whatsappUrl = `https://wa.me/YOUR_WHATSAPP_NUMBER?text=${encodeURIComponent(
+      text
+    )}`;
 
-  setTimeout(handleWhatsApp, 1500);
+    const timer = setTimeout(() => {
+      window.open(whatsappUrl, "_blank");
+      onClose();
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [roomName, onClose]);
+
+  if (!roomName) return null;
 
   return (
     <AnimatePresence>

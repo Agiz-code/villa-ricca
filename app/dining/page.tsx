@@ -24,7 +24,7 @@ export default function DiningPage() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-16 items-center mb-32">
-        <div className="rounded-3xl overflow-hidden aspect-[4/5] relative">
+        <div className="rounded-3xl overflow-hidden aspect-4/5 relative">
           <Image
             src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=800"
             alt="The Glass House Dining"

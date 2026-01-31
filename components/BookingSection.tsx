@@ -20,7 +20,8 @@ export function BookingSection() {
       formData.checkIn
     } to ${formData.checkOut}.`;
 
-    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(
+    // TODO: Replace with actual WhatsApp business number
+    const whatsappUrl = `https://wa.me/YOUR_WHATSAPP_NUMBER?text=${encodeURIComponent(
       text
     )}`;
 

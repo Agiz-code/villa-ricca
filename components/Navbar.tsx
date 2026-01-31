@@ -45,7 +45,7 @@ export function Navbar() {
 
         <div className="hidden md:flex space-x-8 items-center">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.id}
               href={item.id}
               className={`text-sm uppercase tracking-widest transition-colors ${
@@ -57,7 +57,7 @@ export function Navbar() {
               }`}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
           <a
             href="/suites"
@@ -90,7 +90,7 @@ export function Navbar() {
             className="fixed inset-0 bg-stone-50 z-40 flex flex-col items-center justify-center space-y-8"
           >
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.id}
                 href={item.id}
                 onClick={() => setIsOpen(false)}
@@ -101,7 +101,7 @@ export function Navbar() {
                 }`}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
             <a
               href="/suites"
